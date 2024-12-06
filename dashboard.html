@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* General body and layout styles */
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f8fa;
+        display: flex;
+      }
+
+      .dashboard {
+        display: flex;
+        height: 100vh;
+        width: 100%;
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: #2196f3;
+        color: white;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .sidebar h2 {
+        font-size: 24px;
+        margin-bottom: 40px;
+      }
+
+      .sidebar nav ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .sidebar nav ul li {
+        margin: 20px 0;
+      }
+
+      .sidebar nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+      }
+
+      .sidebar nav ul li a:hover {
+        color: #ffeb3b; /* Yellow on hover */
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .header {
+        background-color: #2196f3;
+        color: white;
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h2 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .card p {
+        font-size: 18px;
+        margin: 10px 0;
+      }
+
+      .card p strong {
+        font-weight: bold;
+      }
+
+      button {
+        background-color: #2196f3; /* Blue background */
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+      }
+
+      button:hover {
+        background-color: #1976d2; /* Darker blue */
+      }
+
+      /* Logout button */
+      header button {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+        border-radius: 5px;
+      }
+
+      header button:hover {
+        background-color: #d32f2f;
+      }
+
+      #user-info {
+        font-size: 18px;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h2>Dashboard</h2>
+        <nav>
+          <ul>
+            <!-- <li><a href="profile.html">My Profile</a></li>
+            <li><a href="user-details.html">View User Details</a></li> -->
+            <li><a href="#" onclick="logout()">Logout</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main content -->
+      <main class="main-content">
+        <header class="header">
+          <h1>User Profile</h1>
+          <div id="user-info"></div>
+        </header>
+
+        <div class="container">
+          <h2>Your Details</h2>
+          <div id="profile-details" class="card">
+            <!-- User details will be inserted here -->
+          </div>
+
+          <!-- <button onclick="editProfile()">Edit Profile</button> -->
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token || "";
+
+      // Function to log out
+      function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+      }
+
+      // Check if the user is authenticated
+      async function checkIsAuthenticated() {
+        if (!user) {
+          window.location.href = "index.html";
+          return;
+        }
+      }
+
+      // Fetch user info from the API
+      async function fetchUserInfo() {
+        try {
+          const response = await axios.get(`${API_URL}/user/${user.id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const userInfo = response.data;
+          document.getElementById("user-info").innerHTML = `
+          <p>Welcome, ${userInfo.name.split(" ")[0]}</p>
+        `;
+          document.getElementById("profile-details").innerHTML = `
+          <p><strong>Name:</strong> ${userInfo.name}</p>
+          <p><strong>Email:</strong> ${userInfo.email}</p>
+          <p><strong>Role:</strong> ${userInfo.role}</p>
+          <p><strong>Balance:</strong> $${userInfo.balance}</p>
+        `;
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+        }
+      }
+
+      // Function to handle profile editing
+      //   function editProfile() {
+      //     // You can add logic for editing user profile here (e.g., redirect to an edit page)
+      //     window.location.href = "edit-profile.html"; // Redirect to edit page (example)
+      //   }
+
+      // Load user profile when the page is loaded
+      window.onload = () => {
+        checkIsAuthenticated();
+        fetchUserInfo();
+      };
+    </script>
+  </body>
+</html>

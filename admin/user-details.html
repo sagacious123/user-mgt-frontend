@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - View Users</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f7fa;
+      }
+
+      header {
+        background-color: #2196f3; /* Blue background */
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      header button {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+        border-radius: 5px;
+      }
+
+      header button:hover {
+        background-color: #d32f2f;
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h2 {
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
+
+      /* User details section */
+      #user-details {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      #user-details p {
+        font-size: 18px;
+        margin: 10px 0;
+      }
+
+      #user-details p strong {
+        font-weight: bold;
+      }
+
+      /* Update balance form section */
+      #update-form {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      #update-form label {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      #update-form input {
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 15px;
+      }
+
+      #update-form button {
+        background-color: #2196f3; /* Blue background */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+      }
+
+      #update-form button:hover {
+        background-color: #1976d2; /* Darker blue */
+      }
+
+      /* Button for editing balance */
+      button {
+        background-color: #2196f3; /* Blue background */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+
+      button:hover {
+        background-color: #1976d2; /* Darker blue */
+      }
+
+      /* Styling the page header */
+      #admin-info {
+        font-size: 18px;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Admin - View User</h1>
+      <div id="admin-info"></div>
+      <button onclick="logout()">Logout</button>
+    </header>
+    <div class="container">
+      <h2>User Details</h2>
+      <div id="user-details">
+        <!-- User details will be inserted here -->
+      </div>
+      <div id="update-form" style="display: none">
+        <h3>Update User Balance</h3>
+        <form id="update-balance-form">
+          <label for="balance">New Balance:</label>
+          <input type="number" id="balance" required />
+          <button type="submit">Update Balance</button>
+        </form>
+      </div>
+      <button onclick="toggleUpdateForm()">Edit Balance</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token || "";
+
+      const userId = new URLSearchParams(window.location.search).get("id");
+
+      // Function to log out
+      function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "/Charles-sweb/index.html"; // Redirect to login page
+      }
+
+      // Check if the user is authenticated and is an admin
+      async function checkAdmin() {
+        if (!user) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        if (user.role !== "admin") {
+          window.location.href = "login.html";
+        }
+      }
+
+      // Fetch admin info from API
+      async function fetchAdminInfo() {
+        try {
+          const response = await axios.get(`${API_URL}/user/${user.id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const adminInfo = response.data;
+          document.getElementById("admin-info").innerHTML = `
+          <p>Welcome, ${adminInfo.name} (${adminInfo.role})</p>
+        `;
+        } catch (error) {
+          console.error("Error fetching admin details:", error);
+        }
+      }
+
+      // Fetch the user details from the API
+      async function fetchUserDetails() {
+        try {
+          const response = await axios.get(`${API_URL}/user/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const user = response.data;
+          document.getElementById("user-details").innerHTML = `
+          <p><strong>Name:</strong> ${user.name}</p>
+          <p id='email'><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Role:</strong> ${user.role}</p>
+          <p><strong>Balance:</strong> $${user.balance}</p>
+        `;
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+        }
+      }
+
+      // Function to toggle the edit balance form
+      function toggleUpdateForm() {
+        const form = document.getElementById("update-form");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+      }
+
+      // Function to handle updating the user balance
+      async function updateBalance(event) {
+        event.preventDefault();
+
+        const newBalance = document.getElementById("balance").value;
+
+        try {
+          const response = await axios.put(
+            `${API_URL}/admin/update-balance`,
+            {
+              userId,
+              balance: newBalance,
+            },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          alert("Balance updated successfully!");
+          toggleUpdateForm();
+          fetchUserDetails();
+        } catch (error) {
+          console.error("Error updating balance:", error);
+        }
+      }
+
+      // Attach the form submit event
+      document
+        .getElementById("update-balance-form")
+        .addEventListener("submit", updateBalance);
+
+      // Load the user details when the page is loaded
+      window.onload = () => {
+        checkAdmin();
+        fetchUserDetails();
+      };
+    </script>
+  </body>
+</html>
