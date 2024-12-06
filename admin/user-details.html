@@ -164,18 +164,18 @@
       // Function to log out
       function logout() {
         localStorage.removeItem("user");
-        window.location.href = "/Charles-sweb/index.html"; // Redirect to login page
+        window.location.href = "/index.html"; // Redirect to login page
       }
 
       // Check if the user is authenticated and is an admin
       async function checkAdmin() {
         if (!user) {
-          window.location.href = "login.html";
+          window.location.href = "/index.html";
           return;
         }
 
         if (user.role !== "admin") {
-          window.location.href = "login.html";
+          window.location.href = "/index.html";
         }
       }
 
