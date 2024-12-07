@@ -72,7 +72,9 @@
         margin-bottom: 20px;
       }
 
-      /* Table styles */
+      .responsive-table {
+        overflow-x: auto;
+      }
       table {
         width: 100%;
         border-collapse: collapse;
@@ -83,6 +85,7 @@
       th,
       td {
         border: 1px solid #ddd;
+        white-space: nowrap;
       }
 
       th,
@@ -125,18 +128,39 @@
       }
 
       #user-list td button:hover {
-        background-color: #1565c0; /* Darker blue for button hover */
+        background-color: #1565c0;
       }
 
       #user-list .role-td {
         text-transform: capitalize;
       }
 
-      /* Styling the page header */
       #admin-info {
         font-size: 18px;
         margin-top: 20px;
         color: #555;
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 18px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        table th,
+        table td {
+          font-size: 12px;
+          padding: 8px;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+        }
       }
     </style>
   </head>
@@ -150,20 +174,22 @@
         <h2>User List</h2>
         <a href="create-user.html">Create new user</a>
       </div>
-      <table id="user-list">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Balance ($)</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- User list will be inserted here -->
-        </tbody>
-      </table>
+      <div class="responsive-table">
+        <table id="user-list">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Balance ($)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- User list will be inserted here -->
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

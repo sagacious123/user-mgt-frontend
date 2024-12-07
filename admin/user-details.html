@@ -130,13 +130,58 @@
       }
 
       button:hover {
-        background-color: #1976d2; /* Darker blue */
+        background-color: #1976d2;
       }
 
-      /* Styling the page header */
       #admin-info {
         font-size: 18px;
         color: #fff;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          padding: 10px;
+          text-align: center;
+          flex-direction: column;
+        }
+
+        #user-details {
+          padding: 15px;
+        }
+
+        button {
+          font-size: 14px;
+          padding: 8px 12px;
+        }
+
+        .container {
+          padding: 10px;
+        }
+
+        #update-form {
+          margin-top: 15px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 18px;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+        }
+
+        #user-details p {
+          font-size: 14px;
+        }
+
+        #update-form input {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 10px;
+        }
       }
     </style>
   </head>

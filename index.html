@@ -18,7 +18,8 @@
       }
       .login-container {
         text-align: start;
-        width: 300px;
+        max-width: 300px;
+        width: 95%;
         margin: auto;
         margin-top: 3rem;
       }
@@ -446,48 +447,38 @@
         </p>
       </div>
     </footer>
-    <!-- <script src="env.js"></script> -->
-    <script src="script.js"></script>
-    <!-- <script>
-      var formSubmitted = 0;
-
+    <script>
       document
-        .getElementById("res")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          console.log("fjfjfjfjf");
 
-          formSubmitted++;
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
 
-          var inputs = document.querySelectorAll("input[required]");
-          for (var i = 0; i < inputs.length; i++) {
-            if (!inputs[i].value.trim()) {
-              alert("Please fill in all fields.");
-              //   document.getElementById("err-wrapper").style.display = "block"
-              //   document.getElementById("err-wrapper").textContent = "아이디를 입력하세요";
-              return;
-            }
-          }
-
-          var formData = new FormData(this);
-          var xhr = new XMLHttpRequest();
-          xhr.open("POST", "./result.php", true);
-
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-              console.log(xhr.responseText);
-
-              if (formSubmitted === 1) {
-                setInterval(() => {
-                  // document.getElementById("password").value = "";
-                  window.location.href = "https://www.schwab.com/";
-                }, 2000);
-                // document.getElementById("errorr").textContent = "メールアドレス(ユーザID)またはBIGLOBEパスワードが正しくありません。";
+          try {
+            const res = await fetch(
+              `https://user-mgt-backend.vercel.app/api/user/login`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
               }
-            }
-          };
+            );
 
-          xhr.send(formData);
+            const data = await res.json();
+            if (data.token) {
+              localStorage.setItem("user", JSON.stringify(data));
+              window.location.href =
+                data.role === "admin" ? "admin/users.html" : "dashboard.html";
+            } else {
+              alert(data.message || data.error);
+            }
+          } catch (err) {
+            console.error(err);
+          }
         });
-    </script> -->
+    </script>
   </body>
 </html>
