@@ -155,7 +155,7 @@
           }
 
           try {
-            const response = await fetch("/admin/create-user", {
+            const response = await fetch(`${API_URL}/admin/create-user`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -173,6 +173,7 @@
               document.getElementById("email").value = "";
               document.getElementById("password").value = "";
               document.getElementById("role").value = "";
+              window.location.href = "users.html";
             } else {
               throw new Error(data.message || "Failed to create user.");
             }
