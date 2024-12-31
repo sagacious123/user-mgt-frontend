@@ -210,7 +210,7 @@
         background-color: white;
         padding: 20px;
         border-radius: 8px;
-        width: 400px;
+        max-width: 500px;
         text-align: center;
       }
 
@@ -222,7 +222,22 @@
       .modal p {
         font-size: 18px;
         color: #777;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
+      }
+
+      /* #otp-modal {
+        display: flex;
+      } */
+
+      #otp-modal .otp-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 200px;
+        margin: 0 auto 10px;
+      }
+      #otp-modal .otp-form input {
+        padding: 10px;
       }
 
       /* Progress Slider (infinite loader) */
@@ -499,11 +514,24 @@
       </div>
     </div>
 
+    <div class="modal" id="otp-modal">
+      <div class="modal-content">
+        <h2>Enter OTP Code to proceed with transaction</h2>
+        <p>Check your email for OTP Code</p>
+        <div class="otp-form">
+          <input type="text" />
+          <button>Continue</button>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
       const API_URL = "https://user-mgt-backend.vercel.app/api";
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user?.token || "";
+      const progressModal = document.getElementById("modal");
+      const otpModal = document.getElementById("otp-modal");
 
       // Function to log out
       function logout() {
@@ -518,14 +546,12 @@
           return;
         }
       }
-      // Handle wire transfer form submission
 
       async function submitTransaction(transactionDetails, token) {
+        progressModal.style.display = "flex";
         try {
-          // Show the modal
-          document.getElementById("modal").style.display = "flex";
           const response = await fetch(
-            `http://localhost:5001/api/user/${user.id}/transactions`,
+            `https://user-mgt-backend.vercel.app/api/user/${user.id}/transactions`,
             {
               method: "POST",
               headers: {
@@ -539,23 +565,27 @@
           if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || "Transaction failed.");
-            document.getElementById("modal").style.display = "none";
+            progressModal.style.display = "none";
+            otpModal.style.display = "flex";
           }
 
           const data = await response.json();
 
-          document.getElementById("modal").style.display = "none";
-          alert("Transfer Completed");
-          //   alert(
-          //     `Transaction Successful! Transaction ID: ${data.transactionId}`
-          //   );
+          progressModal.style.display = "none";
+          otpModal.style.display = "flex";
         } catch (error) {
           console.error(error.message);
-          document.getElementById("modal").style.display = "none";
-          alert("Transfer not completed");
-          //   alert(`Error: ${error.message}`);
+          progressModal.style.display = "none";
+          otpModal.style.display = "flex";
         }
       }
+
+      otpModal.querySelector("button").addEventListener("click", () => {
+        if (otpModal.querySelector("input").value) {
+          //   otpModal.style.display = "none";
+          window.location.reload();
+        }
+      });
 
       document
         .getElementById("wire-transfer-form")

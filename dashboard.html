@@ -38,6 +38,60 @@
         background-color: #d32f2f;
       }
 
+      header p {
+        margin: 0;
+      }
+      header p:first-child {
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      .metrics-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        /* width: 90%; */
+        max-width: 1200px;
+      }
+      .metrics-container .card {
+        background-color: #1976d2;
+        color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        transition: transform 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: space-between;
+      }
+      .metrics-container .card:nth-child(2) {
+        background-color: rgb(21, 177, 125);
+      }
+      .metrics-container .card:nth-child(3) {
+        background-color: rgb(208, 64, 110);
+      }
+      .metrics-container .card:nth-child(4) {
+        background-color: rgb(175, 154, 51);
+      }
+      /* .metrics-container .card:hover {
+        transform: scale(1.05);
+      } */
+      .metrics-container .card h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .metrics-container .card p {
+        margin: 26px 0 8px;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .metrics-container .currency {
+        font-size: 18px;
+        font-weight: normal;
+      }
+
       .sidebar {
         width: 250px;
         background-color: #2196f3;
@@ -134,7 +188,7 @@
       .header {
         background-color: #2196f3;
         color: white;
-        padding: 20px;
+        padding: 14px;
         margin-bottom: 30px;
       }
 
@@ -143,29 +197,57 @@
         margin: 0 auto;
       }
 
+      .loader {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(6px);
+      }
+
+      .loader-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 180px;
+        text-align: center;
+      }
+
+      .loader p {
+        font-size: 18px;
+        color: #777;
+        margin: 0;
+      }
+
       h2 {
         font-size: 28px;
         color: #333;
         margin-bottom: 20px;
       }
 
-      .card {
+      .profile-details-card {
         background-color: white;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         margin-bottom: 30px;
       }
-      .card button {
+      .profile-details-card button {
         margin-top: 12px;
       }
 
-      .card p {
+      .profile-details-card p {
         font-size: 18px;
         margin: 10px 0;
       }
 
-      .card p strong {
+      .profile-details-card p strong {
         font-weight: bold;
       }
 
@@ -300,18 +382,43 @@
 
       <main class="main-content">
         <header class="header">
-          <h1>User Profile</h1>
+          <!-- <h1>User Profile</h1> -->
           <div id="user-info"></div>
           <button onclick="logout()">Logout</button>
         </header>
 
+        <div class="metrics-container">
+          <div class="card" id="balance-card">
+            <h3>Account Balance</h3>
+            <p>$<span id="balance">0</span></p>
+          </div>
+          <div class="card" id="transactions-card">
+            <h3>Recent Transactions</h3>
+            <p>$<span id="transactions">0</span></p>
+          </div>
+          <div class="card" id="savings-card">
+            <h3>Refunds processed</h3>
+            <p>$<span id="savings">0</span></p>
+          </div>
+          <div class="card" id="expenditures-card">
+            <h3>Total Expenditures</h3>
+            <p>$<span id="expenditures">0</span></p>
+          </div>
+        </div>
+
         <div class="container">
           <h2>Your Details</h2>
-          <div id="profile-details" class="card"></div>
+          <div id="profile-details" class="profile-details-card"></div>
 
           <!-- <button onclick="editProfile()">Edit Profile</button> -->
         </div>
       </main>
+    </div>
+
+    <div class="loader" id="loader">
+      <div class="loader-content">
+        <p>Please wait...</p>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -319,6 +426,7 @@
       const API_URL = "https://user-mgt-backend.vercel.app/api";
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user?.token || "";
+      const loader = document.getElementById("loader");
 
       // Function to log out
       function logout() {
@@ -336,6 +444,7 @@
 
       // Fetch user info from the API
       async function fetchUserInfo() {
+        loader.style.display = "flex";
         try {
           const response = await axios.get(`${API_URL}/user/${user.id}`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -343,17 +452,27 @@
           const userInfo = response.data;
           document.getElementById("user-info").innerHTML = `
           <p>Welcome, ${userInfo.name.split(" ")[0]}</p>
+          <p>Account balance as at ${new Date().toLocaleDateString()} is $${userInfo.balance.toLocaleString()}</p>
         `;
           document.getElementById("profile-details").innerHTML = `
           <div>
           <p><strong>Name:</strong> ${userInfo.name}</p>
           <p><strong>Email:</strong> ${userInfo.email}</p>
-          <p><strong>Role:</strong> ${userInfo.role}</p>
           <p><strong>Balance:</strong> $${userInfo.balance.toLocaleString()}</p>
           </div>
         `;
+
+          document.getElementById("balance").textContent =
+            userInfo.balance.toLocaleString();
+          document.getElementById("transactions").textContent = $0;
+          // document.getElementById("savings").textContent =
+          //   metricsData.savings.toLocaleString();
+          document.getElementById("expenditures").textContent =
+            metricsData.expenditures.toLocaleString();
+          loader.style.display = "none";
         } catch (error) {
           console.error("Error fetching user details:", error);
+          loader.style.display = "none";
         }
       }
 
