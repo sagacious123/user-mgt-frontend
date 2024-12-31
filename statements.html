@@ -3,8 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Dashboard</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Transaction History</title>
     <style>
       * {
         box-sizing: border-box;
@@ -204,6 +203,39 @@
         color: white;
       }
 
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+        white-space: nowrap;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      td {
+        background-color: #ffffff;
+      }
+
+      .no-transaction {
+        text-align: center;
+        padding: 20px 10px;
+        display: none;
+      }
+
       @media (max-width: 768px) {
         header {
           padding: 10px;
@@ -229,6 +261,20 @@
 
         #update-form {
           margin-top: 15px;
+        }
+
+        .transaction-table th,
+        .transaction-table td {
+          padding: 10px;
+          font-size: 14px;
+        }
+
+        header {
+          font-size: 18px;
+        }
+
+        .table-container {
+          padding: 10px;
         }
       }
 
@@ -293,38 +339,46 @@
             <!-- Other nav items -->
           </ul>
           <!-- <ul>
-            <li><a href="#" onclick="logout()">My Statements</a></li>
-          </ul> -->
+                <li><a href="#" onclick="logout()">My Statements</a></li>
+              </ul> -->
         </nav>
       </aside>
-
       <main class="main-content">
         <header class="header">
-          <h1>User Profile</h1>
-          <div id="user-info"></div>
-          <button onclick="logout()">Logout</button>
+          <h1>Account Statement</h1>
         </header>
 
-        <div class="container">
-          <h2>Your Details</h2>
-          <div id="profile-details" class="card"></div>
-
-          <!-- <button onclick="editProfile()">Edit Profile</button> -->
+        <div class="table-container">
+          <table class="transaction-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Sender Account</th>
+                <th>Receiver Account</th>
+                <th>Reference #</th>
+                <th>Comment</th>
+              </tr>
+            </thead>
+            <tbody id="transaction-data">
+              <!-- Transaction rows will be dynamically inserted here -->
+            </tbody>
+          </table>
+          <div class="no-transaction">
+            You have no transaction history, seems you haven't done any
+            transactions yet
+          </div>
         </div>
       </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const API_URL = "http://localhost:5001/api";
+
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user?.token || "";
-
-      // Function to log out
-      function logout() {
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-      }
 
       // Check if the user is authenticated
       async function checkIsAuthenticated() {
@@ -334,26 +388,39 @@
         }
       }
 
-      // Fetch user info from the API
-      async function fetchUserInfo() {
+      async function fetchTransactionHistory() {
         try {
-          const response = await axios.get(`${API_URL}/user/${user.id}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const userInfo = response.data;
-          document.getElementById("user-info").innerHTML = `
-          <p>Welcome, ${userInfo.name.split(" ")[0]}</p>
-        `;
-          document.getElementById("profile-details").innerHTML = `
-          <div>
-          <p><strong>Name:</strong> ${userInfo.name}</p>
-          <p><strong>Email:</strong> ${userInfo.email}</p>
-          <p><strong>Role:</strong> ${userInfo.role}</p>
-          <p><strong>Balance:</strong> $${userInfo.balance.toLocaleString()}</p>
-          </div>
-        `;
+          const response = await axios.get(
+            `${API_URL}/user/${user.id}/transactions`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const transactions = response.data;
+
+          console.log(transactions);
+
+          if (transactions.length) {
+            const tableBody = document.getElementById("transaction-data");
+            transactions.forEach((transaction) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${new Date(transaction.date).toLocaleDateString()}</td>
+                <td>${transaction.accountType}</td>
+                <td>$${transaction.amount}</td>
+                <td>${transaction.senderAccount}</td>
+                <td>${transaction.beneficiaryAccount}</td>
+                <td>${transaction.reference || "-"}</td>
+                <td>${transaction.comment || "-"}</td>
+              `;
+              tableBody.appendChild(row);
+            });
+            return;
+          }
+          document.querySelector(".no-transaction").style.display = "block";
         } catch (error) {
-          console.error("Error fetching user details:", error);
+          console.error("Error fetching transactions:", error);
+          //   alert("Unable to fetch transaction history. Please try again later.");
         }
       }
 
@@ -369,7 +436,7 @@
 
       window.onload = () => {
         checkIsAuthenticated();
-        fetchUserInfo();
+        fetchTransactionHistory();
       };
     </script>
   </body>

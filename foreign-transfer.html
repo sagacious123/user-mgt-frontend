@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wire Transfer</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f8fa;
+        display: flex;
+      }
+
+      .dashboard {
+        display: flex;
+        height: 100vh;
+        width: 100%;
+      }
+
+      header button {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+        border-radius: 5px;
+      }
+
+      header button:hover {
+        background-color: #d32f2f;
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: #2196f3;
+        color: white;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: space-between; */
+      }
+
+      .sidebar h2 a {
+        font-size: 24px;
+        margin-bottom: 40px;
+        text-decoration: none;
+        color: black;
+      }
+
+      .nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .nav-item {
+        margin: 15px 0;
+        position: relative;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: #fff;
+        font-size: 16px;
+        display: block;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .nav-link:hover {
+        background-color: #34495e;
+        border-radius: 5px;
+      }
+      .logout-btn {
+        text-decoration: none;
+        color: #fff;
+        font-size: 16px;
+        display: block;
+        padding: 10px;
+        cursor: pointer;
+        margin-top: 40px;
+      }
+
+      .logout-btn:hover {
+        background-color: #d95217;
+        border-radius: 5px;
+      }
+
+      .dropdown {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: none; /* Hidden by default */
+        /* position: absolute; */
+        /* left: 20px;
+        top: 45px; */
+        background-color: #34495e72;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        z-index: 1000;
+      }
+
+      .dropdown-item {
+        margin: 0;
+      }
+
+      .dropdown-item a {
+        text-decoration: none;
+        color: #fff;
+        font-size: 14px;
+        display: block;
+        padding: 10px;
+      }
+
+      .dropdown-item a:hover {
+        background-color: #3d566e;
+        border-radius: 5px;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .header {
+        background-color: #2196f3;
+        color: white;
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h2 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .card input,
+      .card textarea,
+      .card select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .wire-transfer-form-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+
+      button {
+        background-color: #2196f3; /* Blue background */
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+      }
+
+      button:hover {
+        background-color: #1976d2; /* Darker blue */
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 400px;
+        text-align: center;
+      }
+
+      .modal h2 {
+        font-size: 24px;
+        color: #333;
+      }
+
+      .modal p {
+        font-size: 18px;
+        color: #777;
+        margin-bottom: 40px;
+      }
+
+      /* Progress Slider (infinite loader) */
+      .progress-container {
+        width: 100%;
+        height: 10px;
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        margin: 20px 0;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background-color: #2196f3;
+        width: 100%;
+        animation: slide 3s linear infinite;
+      }
+
+      /* Infinite sliding effect */
+      @keyframes slide {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .table-container {
+        padding: 20px;
+      }
+
+      .transaction-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .transaction-table th,
+      .transaction-table td {
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .transaction-table th {
+        background-color: #34495e; /* Sidebar hover blue */
+        color: #ffffff;
+      }
+
+      .transaction-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .transaction-table tr:hover {
+        background-color: #e8f6ff; /* Light blue hover effect */
+      }
+
+      .transaction-table td {
+        color: #333333;
+      }
+
+      .transaction-table td a {
+        color: #2c3e50;
+        text-decoration: none;
+      }
+
+      .transaction-table td a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          padding: 10px;
+          text-align: center;
+        }
+
+        .sidebar {
+          width: 170px;
+        }
+
+        #user-details {
+          padding: 15px;
+        }
+
+        button {
+          font-size: 14px;
+          padding: 8px 12px;
+        }
+
+        .container {
+          padding: 10px;
+        }
+
+        #update-form {
+          margin-top: 15px;
+        }
+
+        .transaction-table th,
+        .transaction-table td {
+          padding: 10px;
+          font-size: 14px;
+        }
+
+        header {
+          font-size: 18px;
+        }
+
+        .table-container {
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .sidebar {
+          display: none;
+        }
+        header button {
+          display: inline-block;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 18px;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+        }
+
+        #user-details p {
+          font-size: 14px;
+        }
+
+        #update-form input {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <h2>
+          <a href="dashboard.html"> Dashboard </a>
+        </h2>
+        <nav>
+          <ul class="nav">
+            <li class="nav-item">
+              <a href="#" class="nav-link" id="fund-transfers">
+                Fund Transfers
+              </a>
+              <ul class="dropdown" id="fund-transfers-dropdown">
+                <li class="dropdown-item">
+                  <a href="local-transfer.html">Local Transfer</a>
+                </li>
+                <li class="dropdown-item">
+                  <a href="foreign-transfer.html">Wire Transfer</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="statements.html" class="nav-link"> My Statements </a>
+            </li>
+            <li>
+              <a href="#" class="logout-btn" onclick="logout()">Logout</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <header class="header">
+          <h1>Wire Transfer</h1>
+        </header>
+
+        <div class="container">
+          <div class="card">
+            <h2>Transfer Details</h2>
+            <form id="wire-transfer-form">
+              <div class="wire-transfer-form-container">
+                <div class="field">
+                  <label for="sender-account">Sender's Account Number</label>
+                  <input
+                    type="text"
+                    id="sender-account"
+                    name="sender-account"
+                    required
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="amount">Amount</label>
+                  <input type="number" id="amount" name="amount" required />
+                </div>
+
+                <div class="field">
+                  <label for="beneficiary-account"
+                    >Beneficiary Account Number</label
+                  >
+                  <input
+                    type="text"
+                    id="beneficiary-account"
+                    name="beneficiary-account"
+                    required
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="beneficiary-name">Beneficiary Account Name</label>
+                  <input
+                    type="text"
+                    id="beneficiary-name"
+                    name="beneficiary-name"
+                    required
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="beneficiary-bank">Beneficiary Bank Name</label>
+                  <input
+                    type="text"
+                    id="beneficiary-bank"
+                    name="beneficiary-bank"
+                    required
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="account-type">Beneficiary Account Type</label>
+                  <select id="account-type" name="account-type" required>
+                    <option value="">Select Account Type</option>
+                    <option value="savings">Savings</option>
+                    <option value="current">Current</option>
+                    <option value="business">Business</option>
+                    <option value="joint">Joint</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="swift-iban">SWIFT/IBAN Number</label>
+                  <input
+                    type="text"
+                    id="swift-iban"
+                    name="swift-iban"
+                    required
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="comment">Comment</label>
+                  <textarea id="comment" name="comment" rows="4"></textarea>
+                </div>
+              </div>
+
+              <button type="submit">Transfer</button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <h2>Transfer in Progress</h2>
+        <p>Verifying submitted data...</p>
+        <div class="progress-container">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token || "";
+
+      // Function to log out
+      function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+      }
+
+      // Check if the user is authenticated
+      async function checkIsAuthenticated() {
+        if (!user) {
+          window.location.href = "index.html";
+          return;
+        }
+      }
+      // Handle wire transfer form submission
+
+      async function submitTransaction(transactionDetails, token) {
+        try {
+          // Show the modal
+          document.getElementById("modal").style.display = "flex";
+          const response = await fetch(
+            `http://localhost:5001/api/user/${user.id}/transactions`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+              },
+              body: JSON.stringify(transactionDetails),
+            }
+          );
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Transaction failed.");
+            document.getElementById("modal").style.display = "none";
+          }
+
+          const data = await response.json();
+
+          document.getElementById("modal").style.display = "none";
+          alert("Transfer Completed");
+          //   alert(
+          //     `Transaction Successful! Transaction ID: ${data.transactionId}`
+          //   );
+        } catch (error) {
+          console.error(error.message);
+          document.getElementById("modal").style.display = "none";
+          alert("Transfer not completed");
+          //   alert(`Error: ${error.message}`);
+        }
+      }
+
+      document
+        .getElementById("wire-transfer-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const formData = new FormData(this);
+
+          const transferData = {
+            senderAccount: formData.get("sender-account"),
+            amount: formData.get("amount"),
+            beneficiaryAccount: formData.get("beneficiary-account"),
+            beneficiaryName: formData.get("beneficiary-name"),
+            beneficiaryBank: formData.get("beneficiary-bank"),
+            accountType: formData.get("account-type"),
+            swiftIban: formData.get("swift-iban"),
+            comment: formData.get("comment"),
+          };
+
+          console.log(transferData);
+
+          submitTransaction(transferData, token);
+        });
+
+      document
+        .getElementById("fund-transfers")
+        .addEventListener("click", function () {
+          const dropdown = document.getElementById("fund-transfers-dropdown");
+          dropdown.style.display =
+            dropdown.style.display === "block" ? "none" : "block";
+          this.style.backgroundColor =
+            dropdown.style.display === "block" ? "#34495e" : "";
+        });
+
+      window.onload = () => {
+        checkIsAuthenticated();
+      };
+    </script>
+  </body>
+</html>
