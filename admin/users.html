@@ -181,6 +181,7 @@
               <th>Name</th>
               <th>Email</th>
               <th>Role</th>
+              <th>Account Number</th>
               <th>Balance ($)</th>
               <th>Actions</th>
             </tr>
@@ -194,7 +195,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      const API_URL = "https://user-mgt-backend.vercel.app/api";
+      // const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const API_URL = "http://localhost:5001/api";
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user?.token || "";
 
@@ -248,6 +250,7 @@
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td class="role-td">${user.role}</td>
+            <td>${user.accountNumber || "-"}</td>
             <td>${user.balance?.toLocaleString()}</td>
             <td><button onclick="viewUser('${user._id}')">View</button></td>
           `;

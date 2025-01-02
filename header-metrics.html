@@ -1,0 +1,243 @@
+<template id="header-metrics-template">
+  <header class="header">
+    <div id="user-info"></div>
+    <button onclick="logout()">Logout</button>
+  </header>
+  <div class="metrics-container">
+    <div class="card" id="balance-card">
+      <h3>Account Balance</h3>
+      <p>$<span id="balance">0</span></p>
+    </div>
+    <div class="card" id="transactions-card">
+      <h3>Recent Transactions</h3>
+      <p>$<span id="transactions">0</span></p>
+    </div>
+    <div class="card" id="savings-card">
+      <h3>Refunds processed</h3>
+      <p>$<span id="savings">0</span></p>
+    </div>
+    <div class="card" id="expenditures-card">
+      <h3>Total Expenditures</h3>
+      <p>$<span id="expenditures">0</span></p>
+    </div>
+  </div>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="header-metrics.js"></script>
+<script>
+  // header-metrics.js
+  //   async function loadHeaderMetrics(containerId, apiUrl) {
+  //     const container = document.getElementById(containerId);
+  //     const template = document.getElementById("header-metrics-template");
+  //     const content = template.content.cloneNode(true);
+
+  //     try {
+  //       // Fetch data from API
+  //       const response = await fetch(apiUrl);
+  //       const data = await response.json();
+
+  //       console.log(data, "data");
+
+  //       // Populate dynamic content
+  //       content.querySelector("#balance").textContent = data.balance || 0;
+  //       content.querySelector("#transactions").textContent =
+  //         data.transactions || 0;
+  //       content.querySelector("#savings").textContent = data.savings || 0;
+  //       content.querySelector("#expenditures").textContent =
+  //         data.expenditures || 0;
+
+  //       const userInfo = content.querySelector("#user-info");
+  //       userInfo.textContent = `Welcome, ${data.userName || "User"}`;
+  //     } catch (error) {
+  //       console.error("Failed to load metrics:", error);
+  //       alert("Failed to load metrics. Please try again later.");
+  //     }
+
+  //     container.appendChild(content);
+  //   }
+
+  //   function logout() {
+  //     alert("Logging out...");
+  //     // Add logout logic here
+  //   }
+</script>
+
+<!-- <template id="header-metrics-template"> </template>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  // const API_URL = "https://user-mgt-backend.vercel.app/api";
+  const API_URL = "http://localhost:5001/api";
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = user?.token || "";
+  const loader = document.getElementById("loader");
+
+  // Function to log out
+  function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  }
+
+  // Check if the user is authenticated
+  async function checkIsAuthenticated() {
+    if (!user) {
+      window.location.href = "index.html";
+      return;
+    }
+  }
+
+  function createHeaderAndMetrics() {
+    const component = document.createElement("div");
+
+    component.innerHTML = `
+<header class="header">
+  <div id="user-info"></div>
+  <button onclick="logout()">Logout</button>
+</header>
+<div class="metrics-container">
+  <div class="card" id="balance-card">
+    <h3>Account Balance</h3>
+    <p>$<span id="balance">0</span></p>
+  </div>
+  <div class="card" id="transactions-card">
+    <h3>Recent Transactions</h3>
+    <p>$<span id="transactions">0</span></p>
+  </div>
+  <div class="card" id="savings-card">
+    <h3>Refunds processed</h3>
+    <p>$<span id="savings">0</span></p>
+  </div>
+  <div class="card" id="expenditures-card">
+    <h3>Total Expenditures</h3>
+    <p>$<span id="expenditures">0</span></p>
+  </div>
+</div>
+`;
+
+    return component;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const app = document.querySelector(".main-content"); // Or a specific container element
+    const headerAndMetrics = createHeaderAndMetrics();
+    // app.appendChild(headerAndMetrics);
+    // fetchUserInfo();
+  });
+
+  function formatDate() {
+    const date = new Date();
+
+    const options = { month: "long" };
+    const month = new Intl.DateTimeFormat("en-US", options).format(date);
+
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    const hours = date.getHours() % 12 || 12;
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const period = date.getHours() >= 12 ? "PM" : "AM";
+
+    const ordinal =
+      day === 1 || day === 21 || day === 31
+        ? "st"
+        : day === 2 || day === 22
+        ? "nd"
+        : day === 3 || day === 23
+        ? "rd"
+        : "th";
+
+    return `${month} ${day}${ordinal} ${year}, ${hours}:${minutes} ${period}`;
+  }
+
+  console.log(formatDate());
+
+  // Fetch user info from the API
+  async function fetchUserInfo() {
+    loader.style.display = "flex";
+    try {
+      const response = await axios.get(`${API_URL}/user/${user.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const userInfo = response.data;
+      // createHeaderAndMetrics();
+      if (userInfo) {
+        document.getElementById("header-metrics-templat").innerHTML = `
+       
+        <div class="metrics-container">
+          <div class="card" id="balance-card">
+            <h3>Account Balance</h3>
+            <p>$<span id="balance">0</span></p>
+          </div>
+          <div class="card" id="transactions-card">
+            <h3>Recent Transactions</h3>
+            <p>$<span id="transactions">0</span></p>
+          </div>
+          <div class="card" id="savings-card">
+            <h3>Refunds processed</h3>
+            <p>$<span id="savings">0</span></p>
+          </div>
+          <div class="card" id="expenditures-card">
+            <h3>Total Expenditures</h3>
+            <p>$<span id="expenditures">0</span></p>
+          </div>
+        </div>
+        <div class="container">
+      <div id="profile-details" class="profile-details-card">
+        <div id="user-info">
+            <p>Welcome ${userInfo.name}</p>
+        <p>Account balance as at ${formatDate()}</p>
+        <p class="bal">$${userInfo.balance.toLocaleString()}</p>
+            </div>
+        <div id="account-info">
+      <p>Account No: <strong>${userInfo.accountNumber}</strong></p>
+      <p>Account Status: <strong>Active</strong></p>
+      <p>Account Type: <strong>NON RESIDENCE ACCOUNT</strong></p>
+      </div>
+        </div>
+    </div>
+        `;
+      }
+      //   document.getElementById("user-info").innerHTML = `
+      //   <p>Welcome, ${userInfo.name.split(" ")[0]}</p>
+      //   <p>Account balance as at ${new Date().toLocaleDateString()} is $${userInfo.balance.toLocaleString()}</p>
+      // `;
+      // document.getElementById("profile-details").innerHTML = `
+      // <div>
+      // <p><strong>Name:</strong> ${userInfo.name}</p>
+      // <p><strong>Email:</strong> ${userInfo.email}</p>
+      // <p><strong>Balance:</strong> $${userInfo.balance.toLocaleString()}</p>
+      // </div>
+      // `;
+
+      // <p><strong>Account No:</strong> 2156425216</p>
+      // <p><strong>Account Status:</strong> Active</p>
+
+      document.getElementById("balance").textContent =
+        userInfo.balance.toLocaleString();
+      document.getElementById("transactions").textContent = $0;
+      // document.getElementById("savings").textContent =
+      //   metricsData.savings.toLocaleString();
+      document.getElementById("expenditures").textContent =
+        metricsData.expenditures.toLocaleString();
+      loader.style.display = "none";
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      loader.style.display = "none";
+    }
+  }
+
+  document
+    .getElementById("fund-transfers")
+    .addEventListener("click", function () {
+      const dropdown = document.getElementById("fund-transfers-dropdown");
+      dropdown.style.display =
+        dropdown.style.display === "block" ? "none" : "block";
+      this.style.backgroundColor =
+        dropdown.style.display === "block" ? "#34495e" : "";
+    });
+
+  window.onload = () => {
+    checkIsAuthenticated();
+    fetchUserInfo();
+  };
+</script> -->

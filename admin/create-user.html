@@ -97,6 +97,203 @@
       </div>
       <div class="form-group">
         <label for="role">Role</label>
+        <select name="role" id="role">
+          <option value="">Select role</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="accountNumber">Account Number</label>
+        <input
+          type="text"
+          id="accountNumber"
+          placeholder="Enter account number"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="pin">PIN</label>
+        <input type="password" id="pin" placeholder="Enter 4-digit PIN" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter user password"
+        />
+      </div>
+
+      <button id="createUserBtn">Create User</button>
+      <div id="message" class="message"></div>
+    </div>
+
+    <script>
+      // const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const API_URL = "http://localhost:5001/api";
+      document
+        .getElementById("createUserBtn")
+        .addEventListener("click", async () => {
+          const name = document.getElementById("name").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const role = document.getElementById("role").value.trim();
+          const password = document.getElementById("password").value.trim();
+          const accountNumber = document
+            .getElementById("accountNumber")
+            .value.trim();
+          const pin = document.getElementById("pin").value.trim();
+          const messageEl = document.getElementById("message");
+
+          // Clear previous messages
+          messageEl.textContent = "";
+          messageEl.className = "message";
+
+          if (!name || !email || !password || !role || !accountNumber || !pin) {
+            messageEl.textContent = "Please fill out all fields.";
+            messageEl.classList.add("error");
+            return;
+          }
+
+          try {
+            const response = await fetch(`${API_URL}/admin/create-user`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name,
+                email,
+                password,
+                role,
+                accountNumber,
+                pin,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              messageEl.textContent = "User created successfully!";
+              messageEl.classList.add("success");
+              // Clear the form
+              document.getElementById("name").value = "";
+              document.getElementById("email").value = "";
+              document.getElementById("password").value = "";
+              document.getElementById("role").value = "";
+              document.getElementById("accountNumber").value = "";
+              document.getElementById("pin").value = "";
+            } else {
+              throw new Error(data.message || "Failed to create user.");
+            }
+          } catch (error) {
+            messageEl.textContent = error.message;
+            messageEl.classList.add("error");
+          }
+        });
+    </script>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create User</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 400px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .message {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .error {
+        color: red;
+      }
+
+      .success {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Create User</h2>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="name" id="name" placeholder="Enter user name" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter user email" />
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
         <select name="role" id="role" placeholder="Enter role">
           <option value="">Select role</option>
           <option value="user">User</option>
@@ -115,7 +312,6 @@
       <div id="message" class="message"></div>
     </div>
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bcrypt.js/2.4.3/bcrypt.min.js"></script> -->
     <script>
       // const bcrypt = require('bcryptjs');
 
@@ -134,7 +330,8 @@
 
       // hashPassword(password);
 
-      const API_URL = "https://user-mgt-backend.vercel.app/api";
+      // const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const API_URL = "http://localhost:5001/api";
       document
         .getElementById("createUserBtn")
         .addEventListener("click", async () => {
@@ -184,4 +381,4 @@
         });
     </script>
   </body>
-</html>
+</html> -->
