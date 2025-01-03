@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
     <style></style>
   </head>
@@ -85,8 +89,7 @@
                 <th>Comment</th>
               </tr>
             </thead>
-            <tbody id="transaction-data">
-            </tbody>
+            <tbody id="transaction-data"></tbody>
           </table>
           <div class="no-transaction">
             You have no transaction history, seems you haven't done any
@@ -103,6 +106,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="header-metrics.js"></script>
     <script src="script.js"></script>
     <script>

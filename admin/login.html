@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Charles Schwab Login Page</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
+    />
     <style>
       * {
         box-sizing: border-box;
@@ -447,7 +451,9 @@
         </p>
       </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script>
+      var notyf = new Notyf();
       const API_URL = "https://user-mgt-backend.vercel.app/api";
       document
         .getElementById("loginForm")
@@ -469,7 +475,12 @@
               window.location.href =
                 data.role === "admin" ? "admin/users.html" : "dashboard.html";
             } else {
-              alert(data.message || data.error);
+              notyf.error({
+                message: data.message || data.error,
+                position: { x: "right", y: "top" },
+                duration: 4000,
+              });
+              // alert(data.message || data.error);
             }
           } catch (err) {
             console.error(err);

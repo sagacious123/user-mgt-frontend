@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
+    />
+
     <title>Charles Schwab Login Page</title>
     <style>
       * {
@@ -449,13 +454,17 @@
         </p>
       </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script>
+      var notyf = new Notyf();
       const API_URL = "https://user-mgt-backend.vercel.app/api";
+      const loginBtn = document.querySelector(".login-button");
       // const API_URL = "http://localhost:5001/api";
       document
         .getElementById("loginForm")
         .addEventListener("submit", async (e) => {
           e.preventDefault();
+          loginBtn.innerHTML = "Loading...";
           const accountNumber = document
             .getElementById("accountNumber")
             .value.trim();
@@ -474,8 +483,14 @@
               localStorage.setItem("user", JSON.stringify(data));
               window.location.href =
                 data.role === "admin" ? "admin/users.html" : "dashboard.html";
+              loginBtn.innerHTML = "Log In";
             } else {
-              alert(data.message || data.error);
+              notyf.error({
+                message: data.message || data.error,
+                position: { x: "right", y: "top" },
+                duration: 4000,
+              });
+              loginBtn.innerHTML = "Log In";
             }
           } catch (err) {
             console.error(err);

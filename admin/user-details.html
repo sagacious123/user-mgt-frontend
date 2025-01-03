@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin - View Users</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
+    />
     <link rel="stylesheet" href="styles.css" />
     <style>
       * {
@@ -207,7 +211,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script>
+      var notyf = new Notyf();
       const API_URL = "https://user-mgt-backend.vercel.app/api";
       // const API_URL = "http://localhost:5001/api";
       const user = JSON.parse(localStorage.getItem("user"));
@@ -291,7 +297,13 @@
             }
           );
 
-          alert("Balance updated successfully!");
+          notyf.success({
+            message: "Balance updated successfully!",
+            position: { x: "right", y: "top" },
+            duration: 4000,
+          });
+          // alert("Balance updated successfully!");
+
           toggleUpdateForm();
           fetchUserDetails();
         } catch (error) {
