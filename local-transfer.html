@@ -379,7 +379,7 @@
       const progressModal = document.getElementById("modal");
       const otpModal = document.getElementById("otp-modal");
       document.getElementById("sender-account").value = user.accountNumber;
-      document.getElementById("sender-account").disabled = true;
+      document.getElementById("sender-account").readOnly = true;
 
       // Function to log out
       function logout() {
