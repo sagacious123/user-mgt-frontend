@@ -1,8 +1,10 @@
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>;
+{
+  /* <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>; */
+}
 var notyf = new Notyf();
 document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
-  const API_URL = "https://user-mgt-backend.vercel.app/api";
-  // const API_URL = "http://localhost:5001/api";
+  // const API_URL = "https://user-mgt-backend.vercel.app/api";
+  const API_URL = "http://localhost:5001/api";
   e.preventDefault();
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;

@@ -11,6 +11,7 @@ function loadHeaderMetrics(containerId, apiUrl) {
   fetch(apiUrl)
     .then((response) => response.json())
     .then((data) => {
+      console.log(data, "jjjjj");
 
       // Populate the container with header metrics
       container.innerHTML = `
@@ -61,4 +62,29 @@ function loadHeaderMetrics(containerId, apiUrl) {
 function logout() {
   localStorage.removeItem("user");
   window.location.href = "index.html";
+}
+
+function formatDate() {
+  const date = new Date();
+
+  const options = { month: "long" };
+  const month = new Intl.DateTimeFormat("en-US", options).format(date);
+
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  const hours = date.getHours() % 12 || 12;
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const period = date.getHours() >= 12 ? "PM" : "AM";
+
+  const ordinal =
+    day === 1 || day === 21 || day === 31
+      ? "st"
+      : day === 2 || day === 22
+      ? "nd"
+      : day === 3 || day === 23
+      ? "rd"
+      : "th";
+
+  return `${month} ${day}${ordinal} ${year}, ${hours}:${minutes} ${period}`;
 }
