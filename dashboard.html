@@ -148,44 +148,6 @@
           });
           const userInfo = response.data;
           if (userInfo) {
-            document.getElementById("details-group").innerHTML = `
-
-            <div class="metrics-container">
-              <div class="card" id="balance-card">
-                <h3>Account Balance</h3>
-                <p>$<span id="balance">${
-                  userInfo.balance.toLocaleString() || 0
-                }</span></p>
-              </div>
-              <div class="card" id="transactions-card">
-                <h3>Recent Transactions</h3>
-                <p>$<span id="transactions">${0}</span></p>
-              </div>
-              <div class="card" id="savings-card">
-                <h3>Refunds processed</h3>
-                <p>$<span id="savings">${0}</span></p>
-              </div>
-              <div class="card" id="expenditures-card">
-                <h3>Total Expenditures</h3>
-                <p>$<span id="expenditures">${0}</span></p>
-              </div>
-            </div>
-            <div class="container">
-          <div id="profile-details" class="profile-details-card">
-            <div id="user-info">
-                <p>Welcome ${userInfo.name}</p>
-            <p>Account balance as at ${formatDate()}</p>
-            <p class="bal">$${userInfo.balance.toLocaleString()}</p>
-                </div>
-            <div id="account-info">
-          <p>Account No: <strong>${userInfo.accountNumber}</strong></p>
-          <p>Account Status: <strong>Active</strong></p>
-          <p>Account Type: <strong>NON RESIDENCE ACCOUNT</strong></p>
-          </div>
-            </div>
-        </div>
-            `;
-
             const userTableBody = document.querySelector("#transaction-data");
             if (!userInfo?.transactions?.length) {
               userTableBody.innerHTML = `<div class="no-transaction">
@@ -200,7 +162,9 @@
     <td>${transaction.date.slice(0, 10)}</td>
     <td>${transaction.description || "-"}</td>
     <td>$${transaction.amount || "-"}</td>
-    <td style="text-transform:capitalize;">${transaction.type}</td>
+    <td style=text-transform:capitalize;color:${
+      transaction.type === "debit" ? "red" : "green"
+    }>${transaction.type}</td>
   `;
               userTableBody.appendChild(row);
             });
