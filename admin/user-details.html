@@ -8,8 +8,8 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <style>
+    <link rel="stylesheet" href="admin.css" />
+    <!-- <style>
       * {
         box-sizing: border-box;
       }
@@ -187,11 +187,14 @@
           margin-bottom: 10px;
         }
       }
-    </style>
+    </style> -->
   </head>
   <body>
     <header>
-      <h1>Admin - View User</h1>
+      <div style="display: flex; align-items: center; gap: 1.4rem">
+        <img style="height: 60px; width: auto" src="../logo.png" alt="logo" />
+        <h1>Charles</h1>
+      </div>
       <div id="admin-info"></div>
       <button onclick="logout()">Logout</button>
     </header>
@@ -199,15 +202,47 @@
       <a class="back" href="users.html">Go Back</a>
       <h2>User Details</h2>
       <div id="user-details"></div>
+      <button id="edit-balance" onclick="toggleUpdateForm()">Edit Balance</button>
+
       <div id="update-form" style="display: none">
         <h3>Update User Balance</h3>
         <form id="update-balance-form">
-          <label for="balance">New Balance:</label>
-          <input type="number" id="balance" required />
-          <button type="submit">Update Balance</button>
+          <div class="form-control">
+            <label for="balance">Amount:</label>
+            <input type="number" id="balance" required />
+          </div>
+          <div class="form-control">
+            <label for="transactionType">Type:</label>
+            <select name="transactionType" id="transactionType">
+              <option value="debit">Debit</option>
+              <option value="credit">Credit</option>
+            </select>
+          </div>
+          <div class="form-control">
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" cols="4"></textarea>
+          </div>
+          <button type="submit">Submit</button>
         </form>
       </div>
-      <button onclick="toggleUpdateForm()">Edit Balance</button>
+
+      <h2 style="margin-top: 40px; font-size: 26px;">Transactions</h2>
+      <div class="responsive-table">
+        <table id="transaction-list">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <!-- <th>Balance ($)</th>
+              <th>Actions</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <!-- User list will be inserted here -->
+          </tbody>
+        </table>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -265,9 +300,26 @@
           document.getElementById("user-details").innerHTML = `
           <p><strong>Name:</strong> ${user.name}</p>
           <p id='email'><strong>Email:</strong> ${user.email}</p>
-          <p id="role"><strong>Role:</strong> ${user.role}</p>
+          <p id="role"><strong>Account No:</strong> ${user.accountNumber}</p>
           <p><strong>Balance:</strong> $${user.balance?.toLocaleString()}</p>
         `;
+
+        if(!user?.transactions?.length) {
+          document.querySelector(".responsive-table").innerHTML = `<div style="text-align: center;">No transactions</div>`
+        }
+
+        const userTableBody = document.querySelector("#transaction-list tbody");
+
+        user?.transactions?.forEach((transaction) => {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+  <td>${transaction.date.slice(0,10)}</td>
+  <td>${transaction.description || '-'}</td>
+  <td>$${transaction.amount || "-"}</td>
+  <td>${transaction.type}</td>
+`;
+  userTableBody.appendChild(row);
+});
         } catch (error) {
           console.error("Error fetching user details:", error);
         }
@@ -277,37 +329,73 @@
       function toggleUpdateForm() {
         const form = document.getElementById("update-form");
         form.style.display = form.style.display === "none" ? "block" : "none";
+        document.getElementById("edit-balance").innerHTML = form.style.display === "none" ? "Edit Balance" : "Close" 
+        
+        // form.
       }
 
       // Function to handle updating the user balance
       async function updateBalance(event) {
         event.preventDefault();
 
-        const newBalance = document.getElementById("balance").value;
+        const value = parseFloat(document.getElementById("balance").value);
+        const transactionType =
+          document.getElementById("transactionType").value;
+        const description = document.getElementById("description").value;
 
         try {
-          const response = await axios.put(
-            `${API_URL}/admin/update-balance`,
+          // Fetch current user balance
+          const { data: userData } = await axios.get(
+            `${API_URL}/user/${userId}`,
             {
-              userId,
-              balance: newBalance,
-            },
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          // const currentBalance = userData.balance;
+          // // const amount = Math.abs(value - currentBalance); // Determine transaction amount
+          // const type = newBalance > currentBalance ? "credit" : "debit";
+
+          if (value === 0) {
+            notyf.error({
+              message: "No balance change detected!",
+              position: { x: "right", y: "top" },
+              duration: 4000,
+            });
+            return;
+          }
+
+          // Send transaction request
+          await axios.post(
+            `${API_URL}/admin/transaction`,
+            { userId, amount: value, type: transactionType, description },
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
 
           notyf.success({
-            message: "Balance updated successfully!",
+            message: `Balance ${transactionType}ed successfully!`,
             position: { x: "right", y: "top" },
             duration: 4000,
           });
-          // alert("Balance updated successfully!");
+
+          // document.getElementById("balance").value = "";
+          // document.getElementById("transactionType").value;
+          // document.getElementById("description").value;
+          value = "";
+          transactionType = "";
+          description = "";
 
           toggleUpdateForm();
           fetchUserDetails();
         } catch (error) {
           console.error("Error updating balance:", error);
+          notyf.error({
+            message: error.response.data.message || "Failed to update balance!",
+            position: { x: "right", y: "top" },
+            duration: 4000,
+          });
         }
       }
 

@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin - View Users</title>
-    <link rel="stylesheet" href="styles.css" />
-    <style>
+    <link rel="stylesheet" href="admin.css" />
+    <!-- <style>
       * {
         box-sizing: border-box;
       }
@@ -162,28 +162,32 @@
           padding: 12px;
         }
       }
-    </style>
+    </style> -->
   </head>
   <body>
     <header>
-      <h1>Admin - View Users</h1>
+      <div style="display: flex; align-items: center; gap: 1.4rem">
+        <img style="height: 60px; width: auto" src="../logo.png" alt="logo" />
+        <h1>Charles</h1>
+      </div>
       <button onclick="logout()">Logout</button>
     </header>
+
     <div class="container">
+      <div class="admin-info" id="admin-info"></div>
       <div class="list-title">
-        <h2>User List</h2>
+        <h3 style="color: gray;">Select an account to view details</h3>
         <a href="create-user.html">Create new user</a>
       </div>
       <div class="responsive-table">
         <table id="user-list">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
+              <th>Account Name</th>
               <th>Account Number</th>
               <th>Balance ($)</th>
-              <th>Actions</th>
+              <th>Email</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -215,18 +219,21 @@
 
         if (user.role !== "admin") {
           window.location.href = "/index.html";
+          return;
         }
+
+        fetchAdminInfo();
       }
 
       // Fetch admin info from API
       async function fetchAdminInfo() {
         try {
-          const response = await axios.get(`${API_URL}/user`, {
+          const response = await axios.get(`${API_URL}/user/${user.id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const adminInfo = response.data;
           document.getElementById("admin-info").innerHTML = `
-          <p>Welcome, ${adminInfo.name} (${adminInfo.role})</p>
+          <p>Welcome, ${adminInfo.name}</p>
         `;
         } catch (error) {
           console.error("Error fetching admin details:", error);
@@ -248,10 +255,9 @@
             const row = document.createElement("tr");
             row.innerHTML = `
             <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td class="role-td">${user.role}</td>
             <td>${user.accountNumber || "-"}</td>
             <td>${user.balance?.toLocaleString()}</td>
+            <td>${user.email}</td>
             <td><button onclick="viewUser('${user._id}')">View</button></td>
           `;
             userTableBody.appendChild(row);
@@ -270,6 +276,7 @@
       window.onload = () => {
         checkAdmin();
         fetchUsers();
+        // fetchAdminInfo();
       };
     </script>
   </body>
