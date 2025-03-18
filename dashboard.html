@@ -14,9 +14,23 @@
   <body>
     <div class="dashboard">
       <aside class="sidebar">
-        <h2>
+        <a
+          href="dashboard.html"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            margin-bottom: 30px;
+            text-decoration: none;
+            color: white;
+          "
+        >
+          <img style="height: 60px; width: auto" src="logo.png" alt="logo" />
+          <h1>Charles</h1>
+        </a>
+        <!-- <h2>
           <a href="dashboard.html"> Dashboard </a>
-        </h2>
+        </h2> -->
         <nav>
           <ul class="nav">
             <li class="nav-item">
@@ -81,20 +95,13 @@
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Type</th>
+                <th>Description</th>
                 <th>Amount</th>
-                <th>Sender Account</th>
-                <th>Receiver Account</th>
-                <th>Reference #</th>
-                <th>Comment</th>
+                <th>Type</th>
               </tr>
             </thead>
             <tbody id="transaction-data"></tbody>
           </table>
-          <div class="no-transaction">
-            You have no transaction history, seems you haven't done any
-            transactions yet
-          </div>
         </div>
       </main>
     </div>
@@ -178,6 +185,25 @@
             </div>
         </div>
             `;
+
+            const userTableBody = document.querySelector("#transaction-data");
+            if (!userInfo?.transactions?.length) {
+              userTableBody.innerHTML = `<div class="no-transaction">
+            You have no transaction history, seems you haven't done any
+            transactions yet
+          </div>`;
+            }
+
+            userInfo?.transactions?.forEach((transaction) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+    <td>${transaction.date.slice(0, 10)}</td>
+    <td>${transaction.description || "-"}</td>
+    <td>$${transaction.amount || "-"}</td>
+    <td style="text-transform:capitalize;">${transaction.type}</td>
+  `;
+              userTableBody.appendChild(row);
+            });
           }
 
           loader.style.display = "none";
@@ -199,7 +225,7 @@
 
       window.onload = () => {
         checkIsAuthenticated();
-        // fetchUserInfo();
+        fetchUserInfo();
       };
     </script>
   </body>

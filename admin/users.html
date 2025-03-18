@@ -176,7 +176,7 @@
     <div class="container">
       <div class="admin-info" id="admin-info"></div>
       <div class="list-title">
-        <h3 style="color: gray;">Select an account to view details</h3>
+        <h3 style="color: gray">Select an account to view details</h3>
         <a href="create-user.html">Create new user</a>
       </div>
       <div class="responsive-table">
@@ -196,6 +196,11 @@
         </table>
       </div>
     </div>
+    <div class="loader" id="loader">
+      <div class="loader-content">
+        <p>Please wait...</p>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
@@ -203,6 +208,7 @@
       // const API_URL = "http://localhost:5001/api";
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user?.token || "";
+      const loader = document.getElementById("loader");
 
       // Function to log out
       function logout() {
@@ -227,6 +233,7 @@
 
       // Fetch admin info from API
       async function fetchAdminInfo() {
+        loader.style.display = "flex";
         try {
           const response = await axios.get(`${API_URL}/user/${user.id}`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -234,14 +241,17 @@
           const adminInfo = response.data;
           document.getElementById("admin-info").innerHTML = `
           <p>Welcome, ${adminInfo.name}</p>
-        `;
+          `;
+          loader.style.display = "none";
         } catch (error) {
+          loader.style.display = "none";
           console.error("Error fetching admin details:", error);
         }
       }
 
       // Fetch user list from API
       async function fetchUsers() {
+        loader.style.display = "flex";
         try {
           const response = await axios.get(`${API_URL}/admin/users`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -262,7 +272,9 @@
           `;
             userTableBody.appendChild(row);
           });
+          loader.style.display = "none";
         } catch (error) {
+          loader.style.display = "none";
           console.error("Error fetching users:", error);
         }
       }

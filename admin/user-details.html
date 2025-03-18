@@ -244,6 +244,11 @@
           </tbody>
         </table>
     </div>
+    <div class="loader" id="loader">
+      <div class="loader-content">
+        <p>Please wait...</p>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
@@ -253,6 +258,7 @@
       // const API_URL = "http://localhost:5001/api";
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user?.token || "";
+      const loader = document.getElementById("loader");
 
       const userId = new URLSearchParams(window.location.search).get("id");
 
@@ -276,6 +282,7 @@
 
       // Fetch admin info from API
       async function fetchAdminInfo() {
+        loader.style.display = "flex";
         try {
           const response = await axios.get(`${API_URL}/user/${user.id}`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -284,13 +291,16 @@
           document.getElementById("admin-info").innerHTML = `
           <p>Welcome, ${adminInfo.name} (${adminInfo.role})</p>
         `;
+        loader.style.display = "none";
         } catch (error) {
+          loader.style.display = "none";
           console.error("Error fetching admin details:", error);
         }
       }
 
       // Fetch the user details from the API
       async function fetchUserDetails() {
+        loader.style.display = "flex";
         try {
           const response = await axios.get(`${API_URL}/user/${userId}`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -316,11 +326,13 @@
   <td>${transaction.date.slice(0,10)}</td>
   <td>${transaction.description || '-'}</td>
   <td>$${transaction.amount || "-"}</td>
-  <td>${transaction.type}</td>
+  <td style="text-transform:capitalize;">${transaction.type}</td>
 `;
   userTableBody.appendChild(row);
 });
+loader.style.display = "none";
         } catch (error) {
+          loader.style.display = "none";
           console.error("Error fetching user details:", error);
         }
       }
