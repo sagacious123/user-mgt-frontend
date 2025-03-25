@@ -208,6 +208,10 @@
         <h3>Update User Balance</h3>
         <form id="update-balance-form">
           <div class="form-control">
+            <label for="date">Date:</label>
+            <input type="datetime-local" id="date" required />
+          </div>
+          <div class="form-control">
             <label for="balance">Amount:</label>
             <input type="number" id="balance" required />
           </div>
@@ -352,10 +356,11 @@ loader.style.display = "none";
       async function updateBalance(event) {
         event.preventDefault();
 
-        const value = parseFloat(document.getElementById("balance").value);
-        const transactionType =
+        let value = parseFloat(document.getElementById("balance").value);
+        let date = document.getElementById("date").value;
+        let transactionType =
           document.getElementById("transactionType").value;
-        const description = document.getElementById("description").value;
+        let description = document.getElementById("description").value;
 
         try {
           // Fetch current user balance
@@ -382,7 +387,7 @@ loader.style.display = "none";
           // Send transaction request
           await axios.post(
             `${API_URL}/admin/transaction`,
-            { userId, amount: value, type: transactionType, description },
+            { userId, amount: value, date, type: transactionType, description },
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -398,6 +403,7 @@ loader.style.display = "none";
           // document.getElementById("transactionType").value;
           // document.getElementById("description").value;
           value = "";
+          date = '';
           transactionType = "";
           description = "";
 
@@ -406,7 +412,7 @@ loader.style.display = "none";
         } catch (error) {
           console.error("Error updating balance:", error);
           notyf.error({
-            message: error.response.data.message || "Failed to update balance!",
+            message: error?.response?.data?.message || "Failed to update balance!",
             position: { x: "right", y: "top" },
             duration: 4000,
           });
